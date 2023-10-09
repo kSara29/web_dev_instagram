@@ -100,7 +100,7 @@ public class UserController: Controller
     }
     
     
-    /*[HttpGet]
+    [HttpGet]
     public IActionResult Login(string returnUrl = null)
     {
         return View(new UserLoginVm { ReturnUrl = returnUrl });
@@ -111,8 +111,8 @@ public class UserController: Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(UserLoginVm model)
     {
-        if (ModelState.IsValid)
-        {
+        /*if (ModelState.IsValid)
+        {*/
             User user = await _userManager.FindByEmailAsync(model.Email);
             SignInResult result = await _signInManager.PasswordSignInAsync(
                 user,
@@ -131,9 +131,9 @@ public class UserController: Controller
             }
 
             ModelState.AddModelError("", "Неправильный логин и (или) пароль");
-        }
+        //}
         return View(model);
-    }*/
+    }
 
     
     [HttpPost]
