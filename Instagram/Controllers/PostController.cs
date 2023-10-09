@@ -51,7 +51,7 @@ public class PostController: Controller
             user.Id
         );
         
-        _db.Posts.Add(post);
+        await _db.Posts.AddAsync(post);
         await _db.SaveChangesAsync();
 
         return RedirectToAction("Profile", "User", new { userId = user.Id });

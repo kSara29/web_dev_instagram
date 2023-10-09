@@ -34,8 +34,6 @@ public class UserController: Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(UserRegisterVm model)
     {
-        /*if (ModelState.IsValid)
-        {*/
             byte[] imageData = null;
             if (model.Avatar.Length > 0)
             {
@@ -65,7 +63,6 @@ public class UserController: Controller
 
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
-        //}
 
         return RedirectToAction("Index", "Home");
     }
@@ -74,27 +71,101 @@ public class UserController: Controller
     [HttpGet]
     public async Task<IActionResult> Profile(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        //var user = await _userManager.FindByIdAsync(userId);
 
+        var user = await _userManager.GetUserAsync(User);
+        var usertarget = await _userManager.FindByIdAsync(userId);
+        
         if (user == null)
             return NotFound();
 
-        var posts = _db.Posts.Where(p => p.UserId == user.Id)
+        var userSource = String.Empty;
+        var userTarget = String.Empty;
+
+        if (user.Id == userId)
+        {
+            userSource = userId;
+            userTarget = userId;
+        }
+        else
+        {
+            userSource = user.Id;
+            userTarget = userId;
+        }
+        
+        var posts = _db.Posts.Where(p => p.UserId == userId)
             .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
             .ToList();
-        
+
+        var followerCount = _db.Subscriptions.Where(u => u.TargetUserId == usertarget.Id).ToList().Count;
+        var followingCout = _db.Subscriptions.Where(u => u.SubscriberId == usertarget.Id).ToList().Count;
+
+        var subscription = _db.Subscriptions
+            .FirstOrDefault(s => s.SubscriberId == user.Id && s.TargetUserId == usertarget.Id);
+
         var vm = new UserProfileVm
+        {
+            UserName = usertarget.UserName,
+            Info = usertarget.Description,
+            Avatar = Convert.ToBase64String(usertarget.Avatar),
+            PostCount = posts.Count,
+            FollowerCount = followerCount,
+            FollowingCount = followingCout,
+            Posts = posts,
+            SourceId = userSource,
+            TargetId = userTarget
+        };
+
+        if (subscription != null)
+            vm.Subscribed = true;
+        
+        return View(vm);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Profile(UserProfileVm vm, string sourceId, string targetId)
+    {
+        var subscription = new Subscription(targetId, sourceId);
+        var user = await _userManager.FindByIdAsync(targetId);
+        
+        var subscriberCheck = _db.Subscriptions
+            .FirstOrDefault(s => s.SubscriberId == sourceId && s.TargetUserId == targetId);
+
+        bool check = false;
+
+        if (subscriberCheck != null)
+        {
+            _db.Subscriptions.Remove(subscriberCheck);
+            await _db.SaveChangesAsync();
+            check = false;
+        }
+        else
+        {
+            await _db.Subscriptions.AddAsync(subscription);
+            await _db.SaveChangesAsync();
+            check = true;
+        }
+
+        var userVm = new UserProfileVm
         {
             UserName = user.UserName,
             Info = user.Description,
             Avatar = Convert.ToBase64String(user.Avatar),
-            PostCount = user.Posts.Count,
+            PostCount = _db.Posts.Where(p => p.UserId == user.Id)
+                .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
+                .ToList().Count,
             FollowerCount = user.Followers.Count,
             FollowingCount = user.Subscriptions.Count,
-            Posts = posts
+            Posts = _db.Posts.Where(p => p.UserId == user.Id)
+                .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
+                .ToList(),
+            Subscribed = check,
+            SourceId = sourceId,
+            TargetId = targetId
         };
         
-        return View(vm);
+        
+        return View(userVm);
     }
     
     
@@ -139,5 +210,28 @@ public class UserController: Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+    
+    [HttpGet]
+    public IActionResult Search()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Search(string keyword)
+    {
+        var users = _db.Users
+            .Where(u => u.UserName.Contains(keyword) || u.Email.Contains(keyword) || u.Name.Contains(keyword))
+            .Select(u => new UserSearchResultVm
+            {
+                Id = u.Id,
+                UserName = u.UserName,
+                Email = u.Email,
+                Name = u.Name
+            })
+            .ToList();
+
+        return View(users);
     }
 }

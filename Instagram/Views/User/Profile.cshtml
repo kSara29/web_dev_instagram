@@ -23,6 +23,26 @@
             <div style="display: flex">
                 <p> @Model.Info </p>
             </div>
+            @if (@Model.SourceId != @Model.TargetId)
+            {
+                <form method="post" asp-controller="User"
+                      asp-action="Profile"
+                      asp-route-sourceId="@Model.SourceId"
+                      asp-route-targetId="@Model.TargetId">
+                    @if (@Model.Subscribed)
+                    {
+                        <div style="display: flex">
+                            <button type="submit" class="btn btn-secondary"> Отписаться </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="display: flex">
+                            <button type="submit" class="btn btn-secondary"> Подписаться </button>
+                        </div>   
+                    }
+                </form>
+            }
         </div>
     </div>
     <div>

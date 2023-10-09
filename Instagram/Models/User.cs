@@ -36,5 +36,4 @@ public sealed class User: IdentityUser
     }
     
     private User(){}
-    
 }
