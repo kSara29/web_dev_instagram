@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Instagram.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231008160539_Initial")]
+    [Migration("20231009073142_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -137,9 +137,9 @@ namespace Instagram.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Avatar")
+                    b.Property<byte[]>("Avatar")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("bytea");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -174,6 +174,10 @@ namespace Instagram.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");

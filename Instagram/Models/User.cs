@@ -5,9 +5,10 @@ namespace Instagram.Models;
 
 public sealed class User: IdentityUser
 {
-    public string Avatar { get; set; }
+    public byte[] Avatar { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
+    public string Password { get; set; }
     public Gender? Gender { get; set; }
     public List<Post> Posts { get; set; } = new();
     public List<Subscription> Subscriptions { get; set; } = new();
@@ -16,7 +17,8 @@ public sealed class User: IdentityUser
     public User(
         string login,
         string email,
-        string avatar,
+        byte[] avatar,
+        string password,
         string? name = null,
         string? description = null,
         Gender? gender = null,
@@ -30,7 +32,9 @@ public sealed class User: IdentityUser
         Description = description;
         Gender = gender;
         PhoneNumber = phoneNumber;
+        Password = password;
     }
     
     private User(){}
+    
 }

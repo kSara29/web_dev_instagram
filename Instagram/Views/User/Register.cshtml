@@ -1,0 +1,105 @@
+﻿@using Instagram.Enums
+@model Instagram.ViewModels.User.UserRegisterVm
+
+@{
+    ViewBag.Title = "Регистрация";
+    Layout = "_Layout";
+}
+
+<h2>Регистрация нового пользователя</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-controller="User" asp-action="Register" method="post" asp-antiforgery="true"  enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="row mb-3">
+                <label asp-for="UserName" for="login" class="col-sm-2 col-form-label">Логин</label>
+                <div class="col">
+                    <input asp-for="UserName" type="text" class="form-control" id="login">
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Email" for="inputEmail3" class="col-sm-2 col-form-label">Адрес электронной почты</label>
+                <div class="col-sm-10">
+                    <input asp-for="Email" type="email" class="form-control" id="inputEmail3">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="input-group mb-3">
+                <label asp-for="Avatar" for="inputGroupFile01" class="col-sm-2 col-form-label">Аватар</label>
+                <input asp-for="Avatar" type="file" class="form-control" id="inputGroupFile01">
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Password" for="inputPassword3" class="col-sm-2 col-form-label"> Пароль </label><br/>
+                <div class="col-sm-10">
+                    <input asp-for="Password" type="password" class="form-control" id="inputPassword3"/>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="PasswordConfirm" for="inputPassword3" class="col-sm-2 col-form-label"> Повторите пароль</label><br/>
+                <div class="col-sm-10">
+                    <input asp-for="PasswordConfirm" type="password" class="form-control" id="inputPassword3"/>
+                    <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Name" for="name" class="col-sm-2 col-form-label">Имя</label>
+                <div class="col">
+                    <input asp-for="Name" type="text" class="form-control" id="name">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="PhoneNumber" for="phone" class="col-sm-2 col-form-label" type="typeNumber">Номер телефона</label>
+                <div class="col">
+                    <input asp-for="PhoneNumber"
+                           placeholder="87011234567"
+                           type="tel" class="form-control" id="phone" pattern="[0-9]{11}" required/>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Gender" for="name" class="col-sm-2 col-form-label">Пол</label>
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input asp-for="Gender" class="form-check-input" type="radio" name="gender" id="male" value="@Gender.Male">
+                        <label asp-for="Gender" class="form-check-label" for="male">Мужской</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input asp-for="Gender" class="form-check-input" type="radio" name="gender" id="female" value="@Gender.Female">
+                        <label asp-for="Gender" class="form-check-label" for="female">Женский</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Description" for="description" class="form-label">Информация о пользователе</label>
+                <textarea asp-for="Description" class="form-control" id="description" rows="3"></textarea>
+            </div>
+
+
+            @*<div class="col-auto">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="autoSizingCheck2">
+                    <label class="form-check-label" for="autoSizingCheck2"> Remember me </label>
+                </div>
+            </div>*@
+
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+
+        @*@section Scripts
+        {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }*@
+    </div>
+</div>
