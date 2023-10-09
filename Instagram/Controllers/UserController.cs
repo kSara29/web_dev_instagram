@@ -84,9 +84,19 @@ public class UserController: Controller
     
     
     [HttpGet]
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile(string userId)
     {
-        return View();
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+            return NotFound();
+
+        var vm = new UserProfileVm
+        {
+            Avatar = Convert.ToBase64String(user.Avatar)
+        };
+        
+        return View(vm);
     }
     
     

@@ -1,0 +1,17 @@
+﻿@model Instagram.ViewModels.User.UserProfileVm
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@if (!string.IsNullOrEmpty(Model.Avatar))
+{
+    <img src="data:image/jpeg;base64, @Model.Avatar" alt="User Avatar" width="30%" height="30%">
+}
+else
+{
+    <p>No avatar available.</p>
+}
+
+
