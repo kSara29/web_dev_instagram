@@ -1,10 +1,48 @@
-﻿@{
+﻿@model Instagram.ViewModels.Home.HomeVm
+
+@{
     ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    
-    <a asp-controller="User" asp-action="Profile" asp-route-userId="eb5a6859-bcbc-422a-8ff0-02008e66aae2">профиль</a>
+<div>
+    <div class="container">
+        @foreach (var post in @Model.Posts)
+        {
+            <div class = "card mb-3">
+                <div style="display: flex; margin: 25px; flex-direction: column" >
+                    <div style="display: flex; align-content: center; align-items: center;">
+                        <img src="data:image/jpeg;base64, @Convert.ToBase64String(post.User.Avatar)"
+                             alt="User Avatar" style="border-radius: 50%; height: 45px; width: 45px; margin-right: 20px">
+                        <p style="font-size: 18px; font-weight: 500"> @post.User.UserName</p>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: flex-end;">
+                        <img src="data:image/jpeg;base64, @Convert.ToBase64String(post.Image)" 
+                             alt="User post" style="width: auto; height: auto; max-width: 1225px; max-height:600px; object-fit: cover">
+                    </div>
+                    <div style="margin-top: 25px">
+                        <img src="Like.png" style="height: 23px; width: auto; margin-right: 15px"/>
+                        <img src="Comment.png" style="height: 23px; width: auto"/>
+                    </div>
+                    <div>
+                        <p style="font-size: 18px; font-weight: 500"> @post.Likes.Count отметок "Нравится "</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 18px;">
+                            <span style="font-weight: bold;">@post.User.UserName</span>
+                            @post.Description
+                        </p>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Добавьте комментарий" 
+                               aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <button class="input-group-text" id="basic-addon2">Опубликовать</button>
+                    </div>
+                    
+                    
+                </div>
+                
+            </div>
+        }
+    </div>
 </div>

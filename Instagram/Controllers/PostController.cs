@@ -56,4 +56,6 @@ public class PostController: Controller
 
         return RedirectToAction("Profile", "User", new { userId = user.Id });
     }
+    
+    
 }

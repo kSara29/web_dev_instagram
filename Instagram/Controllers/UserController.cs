@@ -71,8 +71,6 @@ public class UserController: Controller
     [HttpGet]
     public async Task<IActionResult> Profile(string userId)
     {
-        //var user = await _userManager.FindByIdAsync(userId);
-
         var user = await _userManager.GetUserAsync(User);
         var usertarget = await _userManager.FindByIdAsync(userId);
         
