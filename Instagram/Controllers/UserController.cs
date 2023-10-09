@@ -2,9 +2,7 @@
 using Instagram.Persistence;
 using Instagram.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -15,17 +13,14 @@ public class UserController: Controller
     private readonly AppDbContext _db;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly IWebHostEnvironment _environment;
 
     public UserController(AppDbContext db, 
             UserManager<User> userManager, 
-            SignInManager<User> signInManager, 
-            IWebHostEnvironment environment)
+            SignInManager<User> signInManager)
     {
         _db = db;
         _userManager = userManager;
         _signInManager = signInManager;
-        _environment = environment;
     }
 
     [HttpGet]
@@ -44,13 +39,6 @@ public class UserController: Controller
             byte[] imageData = null;
             if (model.Avatar.Length > 0)
             {
-                /*avatarFileName = Guid.NewGuid().ToString() + Path.GetExtension(avatarFile.FileName);
-
-                string uploadPath = Path.Combine(_environment.WebRootPath, "uploads");
-                Directory.CreateDirectory(uploadPath);
-
-                string filePath = Path.Combine(uploadPath, avatarFileName); */
-
                 using (var binaryReader = new BinaryReader(model.Avatar.OpenReadStream()))
                 {
                     imageData = binaryReader.ReadBytes((int)model.Avatar.Length);
@@ -91,9 +79,19 @@ public class UserController: Controller
         if (user == null)
             return NotFound();
 
+        var posts = _db.Posts.Where(p => p.UserId == user.Id)
+            .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
+            .ToList();
+        
         var vm = new UserProfileVm
         {
-            Avatar = Convert.ToBase64String(user.Avatar)
+            UserName = user.UserName,
+            Info = user.Description,
+            Avatar = Convert.ToBase64String(user.Avatar),
+            PostCount = user.Posts.Count,
+            FollowerCount = user.Followers.Count,
+            FollowingCount = user.Subscriptions.Count,
+            Posts = posts
         };
         
         return View(vm);
@@ -111,28 +109,27 @@ public class UserController: Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(UserLoginVm model)
     {
-        /*if (ModelState.IsValid)
-        {*/
-            User user = await _userManager.FindByEmailAsync(model.Email);
-            SignInResult result = await _signInManager.PasswordSignInAsync(
-                user,
-                model.Password,
-                model.RememberMe,
-                false
-            );
+        User user = await _userManager.FindByEmailAsync(model.Email);
+        SignInResult result = await _signInManager.PasswordSignInAsync(
+            user,
+            model.Password,
+            model.RememberMe,
+            false
+        );
 
-            if (result.Succeeded)
+        if (result.Succeeded)
+        {
+            if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
             {
-                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-                {
-                    return Redirect(model.ReturnUrl);
-                }
-                return RedirectToAction("Index", "Home");
+                return Redirect(model.ReturnUrl);
             }
+            return RedirectToAction("Index", "Home");
+        }
 
-            ModelState.AddModelError("", "Неправильный логин и (или) пароль");
-        //}
-        return View(model);
+        ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+    
+    return View(model);
+        
     }
 
     
