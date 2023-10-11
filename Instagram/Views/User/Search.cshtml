@@ -17,7 +17,9 @@ else
         @foreach (var user in Model)
         {
             <li>
-                <a asp-controller="User" asp-action="Profile" asp-route-userId="@user.Id"> @user.UserName </a>
+                <a asp-controller="User" asp-action="Profile" asp-route-userId="@user.Id">
+                    <p class="display-6" style="font-size: 40px;color: black;"> @user.UserName </p>
+                </a>
             </li>
         }
     </ul>

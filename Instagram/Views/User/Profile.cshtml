@@ -43,16 +43,22 @@
                     }
                 </form>
             }
+            else
+            {
+                <form method="get" asp-controller="Post" asp-action="Add">
+                     <button type="submit" class="btn btn-secondary"> Добавить изображение </button>
+                </form>
+            }
         </div>
     </div>
     <div>
-        <div class="container">
+        <div class="container" style="margin-top: 50px;">
             <div class="row">
-                @foreach (var i in Model.Posts)
+                @foreach (var post in Model.Posts)
                 {
-                    <div class="col-md-3" style="margin-top: 25px">
-                        <img src="data:image/jpeg;base64,@i" alt="User Avatar" class="img-fluid">
-                    </div>
+                    <a style="width: auto" href="@Url.Action("Details", "Post", new { postId =  post.Id})">
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(post.Image)" alt="User Avatar" class="img-fluid">
+                    </a>
                 }
             </div>
         </div>

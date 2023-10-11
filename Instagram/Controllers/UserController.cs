@@ -46,7 +46,7 @@ public class UserController: Controller
             User? user = new User(
                 model.UserName,
                 model.Email,
-                imageData,
+                imageData!,
                 model.Password,
                 model.Name,
                 model.Description,
@@ -64,7 +64,7 @@ public class UserController: Controller
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
 
-        return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
     }
     
     
@@ -92,7 +92,7 @@ public class UserController: Controller
         }
         
         var posts = _db.Posts.Where(p => p.UserId == userId)
-            .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
+            .OrderByDescending(p => p.CreatedAt)
             .ToList();
 
         var followerCount = _db.Subscriptions.Where(u => u.TargetUserId == usertarget.Id).ToList().Count;
@@ -143,6 +143,9 @@ public class UserController: Controller
             await _db.SaveChangesAsync();
             check = true;
         }
+        
+        var followerCount = _db.Subscriptions.Where(u => u.TargetUserId == targetId).ToList().Count;
+        var followingCout = _db.Subscriptions.Where(u => u.SubscriberId == targetId).ToList().Count;
 
         var userVm = new UserProfileVm
         {
@@ -152,10 +155,10 @@ public class UserController: Controller
             PostCount = _db.Posts.Where(p => p.UserId == user.Id)
                 .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
                 .ToList().Count,
-            FollowerCount = user.Followers.Count,
-            FollowingCount = user.Subscriptions.Count,
+            FollowerCount = followerCount,
+            FollowingCount = followingCout,
             Posts = _db.Posts.Where(p => p.UserId == user.Id)
-                .Select(p => p.Image != null ? Convert.ToBase64String(p.Image) : null)
+                .OrderByDescending(p => p.CreatedAt)
                 .ToList(),
             Subscribed = check,
             SourceId = sourceId,
@@ -170,8 +173,14 @@ public class UserController: Controller
     [HttpGet]
     public IActionResult Login(string returnUrl = null)
     {
+        if (User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         return View(new UserLoginVm { ReturnUrl = returnUrl });
     }
+
 
     
     [HttpPost]
@@ -207,7 +216,7 @@ public class UserController: Controller
     public async Task<IActionResult> LogOff()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Login", "User");
     }
     
     [HttpGet]

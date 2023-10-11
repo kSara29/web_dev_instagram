@@ -1,4 +1,5 @@
-﻿using Instagram.Models.Common;
+﻿using System.Runtime.InteropServices.JavaScript;
+using Instagram.Models.Common;
 
 namespace Instagram.Models;
 
@@ -7,6 +8,7 @@ public sealed class Post: Entity
 {
     public byte[] Image { get; }
     public string Description { get; }
+    public DateTime CreatedAt { get; set; }
     public List<Like> Likes { get; set; } = new();
     public List<PostComment> Comments { get; set; } = new();
     
@@ -22,6 +24,7 @@ public sealed class Post: Entity
         Image = image;
         Description = description;
         UserId = userId;
+        CreatedAt = DateTime.UtcNow;
     }
     
     private Post(){}

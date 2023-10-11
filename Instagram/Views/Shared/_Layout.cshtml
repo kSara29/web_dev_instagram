@@ -14,7 +14,7 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="logo-for-instagram-13.png" alt="logo" style="width: 30%; height: 40%"/>
+                <img src="~/logo-for-instagram-13.png" alt="logo" style="width: 30%; height: 40%" asp-append-version="true" />
             </a>
             <form class="d-flex" role="search" id="user-search-form" method="post" asp-controller="User" asp-action="Search">
                 <input class="form-control me-2" type="search" id="user-search-input" name="keyword" placeholder="Search" aria-label="Search">
@@ -31,16 +31,19 @@
                {
                    <ul class="navbar-nav flex-grow-1">
                        <li class="nav-item">
-                           <a asp-controller="User" asp-action="Profile" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
-                               <img alt="icon" src="user.png" style="height: 40px; width: 40px; object-fit: cover"/>
-                           </a>
+                           @if (Context.Request.Path.StartsWithSegments("/User/Profile"))
+                           {
+                               <form method="post" asp-controller="User" asp-action="LogOff">
+                                   <input type="submit" value="Выход" class="btn btn-danger" />
+                               </form>
+                           }
+                           else
+                           {
+                               <a asp-controller="User" asp-action="Profile" asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                                   <img src="~/user.png" alt="icon" style="width: 35px; height: 35px; object-fit: cover" asp-append-version="true"/>
+                               </a>
+                           }
                        </li>
-                       <li class="nav-item">
-                           <form method="post" asp-controller="User" asp-action="LogOff">
-                               <input type="submit" value="Выход" class="btn-dark" />
-                           </form>
-                       </li>
-                       
                    </ul>
                }
                else

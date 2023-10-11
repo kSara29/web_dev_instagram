@@ -1,9 +1,11 @@
 ﻿using Instagram.Models;
 using Instagram.Persistence;
+using Instagram.ViewModels.Home;
 using Instagram.ViewModels.Post;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Instagram.Controllers;
 
@@ -56,6 +58,90 @@ public class PostController: Controller
 
         return RedirectToAction("Profile", "User", new { userId = user.Id });
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(long postId)
+    {
+        //var userProfileId = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        var currentUser = await _userManager.GetUserAsync(User);
+
+        var posts = _db.Posts.Where(p => p.Id == postId)
+            .Include(p => p.User)
+            .Include(p => p.Likes)
+            .Include(p => p.Comments.OrderByDescending(c => c.CreatedAt))
+            .ToList();
+        
+        foreach (var post in posts)
+        {
+            foreach (var comment in post.Comments)
+            {
+                _db.Entry(comment)
+                    .Reference(c => c.User)
+                    .Load();
+            }
+        }
+        
+        var vm = new HomeVm
+        {
+            CurrentUserId = currentUser.Id,
+            Posts = posts
+        };
+
+        return View(vm);
+    }
     
-    
+    [HttpPost]
+    public async Task<IActionResult> Details(HomeVm vm, long postId)
+    {
+        //var userProfile = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        var user = await _userManager.GetUserAsync(User);
+        var like = new Like(user.Id, postId);
+        
+        if (vm.UserComment is not null)
+        {
+            var comment = new PostComment(postId, user.Id, vm.UserComment);
+            await _db.PostComments.AddAsync(comment);
+            await _db.SaveChangesAsync();
+        }
+        
+        var likeCheck = _db.Likes
+            .FirstOrDefault(s => s.UserId == user.Id && s.PostId == postId);
+
+        bool check = false;
+
+        if (likeCheck != null)
+        {
+            _db.Likes.Remove(likeCheck);
+            await _db.SaveChangesAsync();
+        }
+        else
+        {
+            await _db.Likes.AddAsync(like);
+            await _db.SaveChangesAsync();
+        }
+        
+        var posts = _db.Posts.Where(p => p.Id == postId)
+            .Include(p => p.User)
+            .Include(p => p.Comments.OrderByDescending(c => c.CreatedAt))
+            .Include(p => p.Likes)
+            .ToList();
+        
+        foreach (var post in posts)
+        {
+            foreach (var comment in post.Comments)
+            {
+                _db.Entry(comment)
+                    .Reference(c => c.User)
+                    .Load();
+            }
+        }
+        
+        vm = new HomeVm
+        {
+            CurrentUserId = user.Id,
+            Posts = posts
+        };
+        
+        return View(vm);
+    }
 }

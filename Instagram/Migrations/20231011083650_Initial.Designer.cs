@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Instagram.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231009093147_Initial")]
+    [Migration("20231011083650_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -57,6 +57,9 @@ namespace Instagram.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -87,6 +90,9 @@ namespace Instagram.Migrations
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("PostId")
                         .HasColumnType("bigint");

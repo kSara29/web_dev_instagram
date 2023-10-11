@@ -1,7 +1,6 @@
 ﻿@model Instagram.ViewModels.Home.HomeVm
-
 @{
-    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "title";
     Layout = "_Layout";
 }
 
@@ -23,7 +22,7 @@
                              alt="User post" style="width: auto; height: auto; max-width: 1225px; max-height:600px; object-fit: cover">
                     </div>
                     <div style="padding: 10px">
-                        <form method="post" asp-controller="Home" asp-action="Index" asp-route-postId="@post.Id">
+                        <form method="post" asp-controller="Post" asp-action="Details" asp-route-postId="@post.Id">
                             @if (post.Likes.Count > 0)
                             {
                                 @foreach (var like in post.Likes)
@@ -60,7 +59,7 @@
                         </p>
                     </div>
                     <div class="input-group">
-                        <form method="post" asp-controller="Home" asp-action="Index" 
+                        <form method="post" asp-controller="Post" asp-action="Details" 
                               asp-route-postId = "@post.Id"
                               style="display: flex;width: 100%">
                             <input asp-for="UserComment" 

@@ -13,5 +13,6 @@ public class UserProfileVm
     public int FollowingCount { get; set; }
     public string Avatar { get; set; }
     public bool Subscribed { get; set; }
-    public List<string> Posts { get; set; } = new();
+    //public List<string> Posts { get; set; } = new();
+    public List<Models.Post> Posts { get; set; } = new();
 }

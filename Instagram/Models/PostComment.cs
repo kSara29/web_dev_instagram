@@ -11,6 +11,7 @@ public class PostComment: Entity
     public User? User { get; set; }
     
     public string Comment { get; }
+    public DateTime CreatedAt { get; set; }
 
     public PostComment(
         long postId,
@@ -20,7 +21,9 @@ public class PostComment: Entity
         PostId = postId;
         UserId = userId;
         Comment = comment;
+        CreatedAt = DateTime.UtcNow;
     }
     
     private PostComment(){}
+    
 }
