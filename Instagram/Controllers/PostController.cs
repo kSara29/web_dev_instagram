@@ -33,6 +33,9 @@ public class PostController: Controller
     [HttpPost]
     public async Task<IActionResult> Add(PostAddVm model)
     {
+        if (!ModelState.IsValid)
+            return View();
+        
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
             return NotFound();

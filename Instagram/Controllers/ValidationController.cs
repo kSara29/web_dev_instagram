@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Instagram.Controllers;
 
-public class ValidationController
+public class ValidationController: Controller
 {
     private  AppDbContext _context;
     
@@ -20,21 +20,9 @@ public class ValidationController
     }
     
     [AcceptVerbs("GET", "POST")]
-    public bool CheckEmail(string userEmail)
+    public bool EmailCheck(string email)
     {
-        var check = _context.Users.Any(u => u.Email.ToLower() == userEmail.ToLower());
+        var check = _context.Users.Any(u => u.Email.ToLower() == email.ToLower());
         return !check;
     }
-
-    /*[AcceptVerbs("GET", "POST")]
-    public bool CheckNameEdit(string name, string Id)
-    {
-        if (long.TryParse(Id, out long idValue))
-        {
-            var check = _context.Brands.Any(b => b.Name.ToLower() == name.ToLower() && b.Id != idValue);
-            return !check;
-        }
-        
-        return false;
-    }*/
 }

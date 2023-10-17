@@ -116,7 +116,6 @@ public class HomeController : Controller
         vm = new HomeVm
         {
             CurrentUserId = user.Id,
-            //Liked = check,
             Posts = posts
         };
 

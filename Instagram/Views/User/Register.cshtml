@@ -10,8 +10,9 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form enctype="multipart/form-data" asp-controller="User" asp-action="Register" method="post">
+        <form method="post" enctype="multipart/form-data" asp-controller="User" asp-action="Register">
             <div asp-validation-summary="ModelOnly"></div>
+            
             <div class="row mb-3">
                 <label asp-for="UserName" for="login" class="col-sm-2 col-form-label">Логин</label>
                 <div class="col">
@@ -23,7 +24,7 @@
             <div class="row mb-3">
                 <label asp-for="Email" for="inputEmail3" class="col-sm-2 col-form-label">Адрес электронной почты</label>
                 <div class="col-sm-10">
-                    <input asp-for="Email" type="email" class="form-control" id="inputEmail3">
+                    <input asp-for="Email" type="text" class="form-control" id="inputEmail3">
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
@@ -31,6 +32,7 @@
             <div class="input-group mb-3">
                 <label asp-for="Avatar" for="inputGroupFile01" class="col-sm-2 col-form-label">Аватар</label>
                 <input asp-for="Avatar" type="file" class="form-control" id="inputGroupFile01">
+                <span asp-validation-for="Avatar" class="text-danger"></span>
             </div>
 
             <div class="row mb-3">
@@ -61,7 +63,7 @@
                 <div class="col">
                     <input asp-for="PhoneNumber"
                            placeholder="87011234567"
-                           type="tel" class="form-control" id="phone" pattern="[0-9]{11}" required/>
+                           type="tel" class="form-control" id="phone" pattern="[0-9]{11}"/>
                 </div>
             </div>
 
@@ -84,14 +86,27 @@
                 <textarea asp-for="Description" class="form-control" id="description" rows="3"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <button  onclick="logEmailValue()" type="submit" class="btn btn-primary">Зарегистрироваться</button>
         </form>
     </div>
 </div>
 
-@*@section Scripts
+@section Scripts
 {
+    <script>
+    function logEmailValue() {
+        // Получаем элемент input по его ID
+        var emailInput = document.getElementById("inputEmail3");
+    
+        // Получаем значение, введенное в input
+        var emailValue = emailInput.value;
+    
+        // Выводим значение в консоль
+        console.log("Значение введенное в input с id='inputEmail3': " + emailValue);
+    }
+    </script>
+    
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}*@
+}

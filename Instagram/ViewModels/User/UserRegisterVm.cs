@@ -7,17 +7,20 @@ namespace Instagram.ViewModels.User;
 public class UserRegisterVm
 {
     [Required(ErrorMessage = "Поле обязательно")]
-    [Remote(action: "CheckName", controller: "Validation", ErrorMessage ="Этот логин уже занят")]
-    [Display(Name = "Логин")]
-    public string UserName { get; set; }
-    
-    [Required(ErrorMessage = "Поле обязательно")]
-    [Remote(action: "CheckEmail", controller: "Validation", ErrorMessage ="Эта почта уже занята")]
+    [Remote(action: "EmailCheck", controller: "Validation", ErrorMessage ="Эта почта уже занята")]
     [Display(Name = "Адрес электронной почты")]
     public string Email { get; set; }
     
+    
+    [Required(ErrorMessage = "Поле обязательно")]
+    [Remote( "CheckName", "Validation", ErrorMessage ="Этот логин уже занят")]
+    [Display(Name = "Логин")]
+    public string UserName { get; set; }
+    
+    
     [Required(ErrorMessage = "Поле обязательно")]
     public IFormFile  Avatar { get; set; }
+    
     
     [Required(ErrorMessage = "Поле обязательно")]
     [DataType(DataType.Password)]
@@ -30,21 +33,13 @@ public class UserRegisterVm
     [Display(Name = "Подтвердить пароль")]
     public string PasswordConfirm { get; set; }
     
+    public string? Name { get; set; }
     
-    //[Display(Name = "Имя")]
-    public string Name { get; set; }
+    public string? Description { get; set; }
     
+    public string? PhoneNumber { get; set; }
     
-    //[Display(Name = "Информация о пользователе")]
-    public string Description { get; set; }
-    
-    
-    //[Display(Name = "Номер телефона")]
-    public string PhoneNumber { get; set; }
-    
-    
-    //[Display(Name = "Пол")]
-    public Gender Gender { get; set; }
+    public Gender? Gender { get; set; }
     
     public int PostCount { get; set; }
     public int FollowerCount { get; set; }

@@ -30,10 +30,12 @@ public class UserController: Controller
     }
     
     [HttpPost]
-    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(UserRegisterVm model)
     {
+        if (!ModelState.IsValid)
+            return View();
+        
             byte[] imageData = null;
             if (model.Avatar.Length > 0)
             {
@@ -58,7 +60,7 @@ public class UserController: Controller
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Profile", "User", new { userId = user.Id });
             }
 
             foreach (var error in result.Errors)
