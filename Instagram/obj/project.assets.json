@@ -1169,11 +1169,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kuand\\OneDrive\\Рабочий стол\\study\\attractor_school\\month_8\\lab_work_59\\Instagram\\Instagram\\Instagram.csproj",
+      "projectUniqueName": "C:\\Users\\kuand\\OneDrive\\Рабочий стол\\homework_59_sara_kuandykova\\Instagram\\Instagram.csproj",
       "projectName": "Instagram",
-      "projectPath": "C:\\Users\\kuand\\OneDrive\\Рабочий стол\\study\\attractor_school\\month_8\\lab_work_59\\Instagram\\Instagram\\Instagram.csproj",
+      "projectPath": "C:\\Users\\kuand\\OneDrive\\Рабочий стол\\homework_59_sara_kuandykova\\Instagram\\Instagram.csproj",
       "packagesPath": "C:\\Users\\kuand\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kuand\\OneDrive\\Рабочий стол\\study\\attractor_school\\month_8\\lab_work_59\\Instagram\\Instagram\\obj\\",
+      "outputPath": "C:\\Users\\kuand\\OneDrive\\Рабочий стол\\homework_59_sara_kuandykova\\Instagram\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\kuand\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1184,7 +1184,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.309\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.311\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1241,7 +1241,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.309\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.311\\RuntimeIdentifierGraph.json"
       }
     }
   }
